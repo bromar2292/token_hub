@@ -5,8 +5,8 @@ class CryptoCoin {
   final String image;
   final double currentPrice;
 
-  // final int marketCap;
-  // final int marketCapRank;
+  final int marketCap;
+  final int marketCapRank;
   // final int? fullyDilutedValuation;
   // final int totalVolume;
   // final double high24h;
@@ -33,8 +33,8 @@ class CryptoCoin {
     required this.name,
     required this.image,
     required this.currentPrice,
-    // required this.marketCap,
-    // required this.marketCapRank,
+    required this.marketCap,
+    required this.marketCapRank,
     // this.fullyDilutedValuation,
     // required this.totalVolume,
     // required this.high24h,
@@ -63,8 +63,8 @@ class CryptoCoin {
       name: json['name'],
       image: json['image'],
       currentPrice: json['current_price'].toDouble(),
-      // marketCap: json['market_cap'],
-      // marketCapRank: json['market_cap_rank'],
+      marketCap: json['market_cap'],
+      marketCapRank: json['market_cap_rank'],
       // fullyDilutedValuation: json['fully_diluted_valuation'],
       // totalVolume: json['total_volume'],
       // high24h: json['high_24h'].toDouble(),
@@ -95,8 +95,8 @@ class CryptoCoin {
       'name': name,
       'image': image,
       'current_price': currentPrice,
-      // 'market_cap': marketCap,
-      // 'market_cap_rank': marketCapRank,
+      'market_cap': marketCap,
+      'market_cap_rank': marketCapRank,
       // 'fully_diluted_valuation': fullyDilutedValuation,
       // 'total_volume': totalVolume,
       // 'high_24h': high24h,

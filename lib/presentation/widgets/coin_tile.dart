@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../../data/models/crypto_coin_modal.dart';
+import '../../domain/entities/crypto_coin_modal.dart';
 import '../screens/coin_detail_screen.dart';
 
 class CoinTile extends StatelessWidget {

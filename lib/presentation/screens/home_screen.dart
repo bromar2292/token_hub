@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:token_hub/data/models/crypto_coin_modal.dart';
+import 'package:token_hub/domain/entities/crypto_coin_modal.dart';
 import '../bloc/home_screen_bloc_cubit.dart';
 import '../bloc/home_screen_bloc_state.dart';
 import '../widgets/coin_tile.dart';
@@ -15,11 +15,8 @@ class HomeScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // Ensure the CoinCubit is provided and listen for text changes
     _searchController.addListener(() {
-      // Fetch the cubit from the context
       final cubit = context.read<CoinCubit>();
-      // Call searchCoins with the current text value
       cubit.searchCoins(_searchController.text);
     });
 

@@ -2,10 +2,10 @@ import 'dart:async';
 
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import 'package:token_hub/data/repositories/coin_list_repository.dart';
+import 'package:token_hub/data/repositories/coin_gecko_repository.dart';
 
-import '../../data/models/crypto_coin_modal.dart';
-import '../../data/models/crypto_price_data_model.dart';
+import '../../domain/entities/crypto_coin_modal.dart';
+import '../../domain/entities/crypto_price_data_model.dart';
 import 'home_screen_bloc_state.dart';
 
 class CoinCubit extends Cubit<CoinListState> {
@@ -18,7 +18,6 @@ class CoinCubit extends Cubit<CoinListState> {
 
   /// omar should these be up here
   List<CryptoCoin> _coins = [];
-  List<CryptoPriceData> _cryptoPriceData = [];
 
   void fetchCoins() async {
     emit(CoinListLoading());

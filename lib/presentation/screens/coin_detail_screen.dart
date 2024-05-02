@@ -1,6 +1,9 @@
+import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:token_hub/data/models/crypto_coin_modal.dart';
+import 'package:token_hub/domain/entities/crypto_coin_modal.dart';
+import 'package:token_hub/presentation/widgets/price_chart.dart';
+// import 'package:charts_flutter/flutter.dart' as charts;
 
 import '../bloc/coin_detail_screen_cubit.dart';
 import '../bloc/coin_detail_screen_state.dart';
@@ -23,8 +26,8 @@ class _CryptoProfilePageState extends State<CryptoProfilePage> {
   @override
   void initState() {
     super.initState();
-    // Load coin details when the page opens
-    //  context.read<CoinDetailBloc>().loadCoinDetails(widget.coin.id);
+
+    context.read<CoinDetailCubit>().loadCoinDetails(widget.coin.name);
   }
 
   @override
@@ -33,122 +36,97 @@ class _CryptoProfilePageState extends State<CryptoProfilePage> {
       appBar: AppBar(
         title: Text(widget.coin.name),
       ),
-      // body: BlocBuilder<CoinDetailCubit, CoinDetailState>(
-      //   builder: (context, state) {
-      //     if (state is CoinDetailLoading) {
-      //       return const Center(child: CircularProgressIndicator());
-      //     } else if (state is CoinDetailError) {
-      //       return Center(child: Text('Error: ${state.error}'));
-      //     } else if (state is CoinDetailLoaded) {
-      //       final coin = state.coin;
-      //       return SingleChildScrollView(
-      //         child: Column(
-      //           children: [
-      //             // Coin image and details
-      //             Row(
-      //               children: [
-      //                 CircleAvatar(
-      //                   backgroundImage: NetworkImage(coin.image),
-      //                   radius: 50.0,
-      //                 ),
-      //                 const SizedBox(width: 16.0),
-      //                 Column(
-      //                   crossAxisAlignment: CrossAxisAlignment.start,
-      //                   children: [
-      //                     Text(
-      //                       coin.name,
-      //                       style: const TextStyle(
-      //                           fontSize: 18.0, fontWeight: FontWeight.bold),
-      //                     ),
-      //                     Text(coin.symbol),
-      //                   ],
-      //                 ),
-      //               ],
-      //             ),
-      //             const SizedBox(height: 16.0),
-      //             // Description
-      //             Text(
-      //               "coin.description",
-      //               style: const TextStyle(fontSize: 14.0),
-      //             ),
-      //             const SizedBox(height: 16.0),
-      //             // Price graph
-      //             // SizedBox(
-      //             //   height: 200.0,
-      //             //   child: _buildPriceGraph(coin.priceHistory),
-      //             // ),
-      //             const SizedBox(height: 16.0),
-      //             // Calculator
-      //             Row(
-      //               children: [
-      //                 Expanded(
-      //                   child: TextField(
-      //                     controller: _usdController,
-      //                     //  keyboardType: TextInputType.numberWithDecimals,
-      //                     decoration: const InputDecoration(
-      //                       labelText: 'USD',
-      //                     ),
-      //                     onChanged: (value) {
-      //                       if (value.isNotEmpty) {
-      //                         final usdValue = double.parse(value);
-      //                         final quantity = usdValue / coin.currentPrice;
-      //                         _quantityController.text =
-      //                             quantity.toStringAsFixed(4);
-      //                       } else {
-      //                         _quantityController.text = "";
-      //                       }
-      //                     },
-      //                   ),
-      //                 ),
-      //                 const SizedBox(width: 8.0),
-      //                 Expanded(
-      //                   child: TextField(
-      //                     controller: _quantityController,
-      //                     //  keyboardType: TextInputType.numberWithDecimals,
-      //                     decoration: const InputDecoration(
-      //                       labelText: 'Quantity',
-      //                     ),
-      //                     onChanged: (value) {
-      //                       if (value.isNotEmpty) {
-      //                         final quantity = double.parse(value);
-      //                         final usdValue = quantity * coin.currentPrice;
-      //                         _usdController.text = usdValue.toStringAsFixed(2);
-      //                       } else {
-      //                         _usdController.text = "";
-      //                       }
-      //                     },
-      //                   ),
-      //                 ),
-      //               ],
-      //             ),
-      //           ],
-      //         ),
-      //       );
-      //     } else {
-      //       return const Center(child: Text("No data"));
-      //     }
-      //   },
-      // ),
+      body: BlocBuilder<CoinDetailCubit, CoinDetailState>(
+        builder: (context, state) {
+          if (state is CoinDetailLoading) {
+            return const Center(child: CircularProgressIndicator());
+          } else if (state is CoinDetailError) {
+            return Center(child: Text('Error: ${state.error}'));
+          } else if (state is CoinDetailLoaded) {
+            final coin = state.cryptoCoinDescription;
+            return SingleChildScrollView(
+              child: Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Column(
+                  children: [
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceAround,
+                      children: [
+                        CircleAvatar(
+                          backgroundImage: NetworkImage(widget.coin.image),
+                          radius: 30.0,
+                        ),
+                      ],
+                    ),
+                    const SizedBox(height: 16.0),
+                    PriceChart(cryptoDataList: state.coinPriceData),
+                    const SizedBox(height: 16.0),
+                    const SizedBox(height: 20.0),
+                    Text(
+                      _reduceText(coin.description),
+                      style: const TextStyle(fontSize: 14.0),
+                    ),
+                    Row(
+                      children: [
+                        Expanded(
+                          child: TextField(
+                            controller: _quantityController,
+                            keyboardType: TextInputType.number,
+                            decoration: const InputDecoration(
+                              labelText: 'Quantity',
+                            ),
+                            onChanged: (value) {
+                              if (value.isNotEmpty) {
+                                final quantity = double.parse(value);
+                                final usdValue = quantity * coin.priceUsd;
+                                _usdController.text =
+                                    usdValue.toStringAsFixed(2);
+                              } else {
+                                _usdController.text = "";
+                              }
+                            },
+                          ),
+                        ),
+                        const SizedBox(width: 8.0),
+                        Expanded(
+                          child: TextField(
+                            controller: _usdController,
+                            keyboardType: TextInputType.number,
+                            decoration: const InputDecoration(
+                              labelText: 'USD',
+                            ),
+                            onChanged: (value) {
+                              if (value.isNotEmpty) {
+                                final usdValue = double.parse(value);
+                                final quantity = usdValue / coin.priceUsd;
+                                _quantityController.text =
+                                    quantity.toStringAsFixed(4);
+                              } else {
+                                _quantityController.text = "";
+                              }
+                            },
+                          ),
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
+              ),
+            );
+          } else {
+            return const Center(child: Text("No data"));
+          }
+        },
+      ),
     );
   }
 
-// charts.LineChart _buildPriceGraph(List<PriceData> priceHistory) {
-//   final series = [
-//     charts.Series<PriceData, DateTime>(
-//       id: 'Price',
-//       colorFn: (_, __) => charts.MaterialPalette.blue.shade200,
-//       data: priceHistory,
-//       domainFn: (data, _) => data.date,
-//       measureFn: (data, _) => data.price,
-//     ),
-//   ];
-//   return charts.LineChart(
-//     series,
-//     animate: false,
-//     domainAxis: const charts.DateTimeAxis(),
-//     primaryYAxis: charts.NumericAxis(
-//       tickFormatter: (value) => '\$${value.toStringAsFixed(2)}',
-//     ),
-//   );
-// }
+  String _reduceText(String description) {
+    final sentencePattern = RegExp(r'(?<=[.!?])\s+');
+    List<String> sentences = description.split(sentencePattern);
+    if (sentences.length > 4) {
+      return '${sentences[0]} ${sentences[1]} ${sentences[2]}...';
+    }
+    return description;
+  }
 }
