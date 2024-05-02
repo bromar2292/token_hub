@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:http/http.dart' as http;
+import 'package:token_hub/constants.dart';
 
 /// data source pulls the remote data
 abstract class CoinGeckoRemoteDataSource {
@@ -11,7 +12,7 @@ abstract class CoinGeckoRemoteDataSource {
 }
 
 class CoinGeckoRemoteDataSourceImpl implements CoinGeckoRemoteDataSource {
-  String apiKey = "CG-3ptYSFzGtseqpiT99r1iMUQp";
+  String apiKey = API_KEY;
 
   @override
   Future<List<dynamic>> fetchCoins() async {
