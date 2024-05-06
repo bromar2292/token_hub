@@ -1,6 +1,7 @@
 import 'package:bloc/bloc.dart';
+import 'package:logger/logger.dart';
 
-import '../../data/repositories/coin_gecko_repository.dart';
+import '../../../data/repositories/coin_gecko_repository.dart';
 import 'coin_detail_screen_state.dart';
 
 class CoinDetailCubit extends Cubit<CoinDetailState> {
@@ -8,6 +9,7 @@ class CoinDetailCubit extends Cubit<CoinDetailState> {
   String? coinId;
 
   CoinDetailCubit(this._repository) : super(CoinDetailInitial());
+  var logger = Logger();
 
   void loadCoinDetails(String coinId) async {
     emit(CoinDetailLoading());
@@ -20,6 +22,7 @@ class CoinDetailCubit extends Cubit<CoinDetailState> {
         coinData,
       ));
     } catch (error) {
+      logger.e(error);
       emit(CoinDetailError(error.toString()));
     }
   }

@@ -1,68 +1,82 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:token_hub/domain/entities/crypto_coin_modal.dart';
-import '../bloc/home_screen_bloc_cubit.dart';
-import '../bloc/home_screen_bloc_state.dart';
+import '../bloc/home_screen_bloc/home_screen_bloc_cubit.dart';
+import '../bloc/home_screen_bloc/home_screen_bloc_state.dart';
+import '../widgets/app_bar_sliver.dart';
 import '../widgets/coin_tile.dart';
+import '../widgets/error_loading_retry_widget.dart';
 
-/// omar maybe impliment debouncing
-class HomeScreen extends StatelessWidget {
+class HomeScreen extends StatefulWidget {
   static const String id = 'Home screen';
 
-  HomeScreen({Key? key}) : super(key: key);
+  const HomeScreen({Key? key}) : super(key: key);
 
+  @override
+  State<HomeScreen> createState() => _HomeScreenState();
+}
+
+class _HomeScreenState extends State<HomeScreen> {
   final TextEditingController _searchController = TextEditingController();
+
+  @override
+  void initState() {
+    super.initState();
+    context.read<HomePageCoinListCubit>().fetchCoins();
+  }
 
   @override
   Widget build(BuildContext context) {
     _searchController.addListener(() {
-      final cubit = context.read<CoinCubit>();
+      final cubit = context.read<HomePageCoinListCubit>();
       cubit.searchCoins(_searchController.text);
     });
 
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('Crypto Coins'),
-        bottom: PreferredSize(
-          preferredSize: const Size.fromHeight(48.0),
-          child: Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: TextField(
-              controller: _searchController,
-              decoration: InputDecoration(
-                labelText: 'Search',
-                hintText: 'Enter coin name',
-                suffixIcon: const Icon(Icons.search),
-                border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(8.0),
-                ),
-              ),
-            ),
-          ),
+    return SafeArea(
+      child: Scaffold(
+        body: CustomScrollView(
+          slivers: [
+            AppBarSliver(searchController: _searchController),
+            const CoinListBuilder()
+          ],
         ),
       ),
-      body: BlocBuilder<CoinCubit, CoinListState>(
-        builder: (context, state) {
-          if (state is CoinListLoading) {
-            return const Center(child: CircularProgressIndicator());
-          } else if (state is CoinListError) {
-            return Center(child: Text('Error: ${state.error}'));
-          } else if (state is CoinStateLoaded) {
-            if (state.coins.isEmpty) {
-              return const Center(child: Text("No coins found"));
-            }
-            return ListView.builder(
-              itemCount: state.coins.length,
-              itemBuilder: (context, index) {
-                final coin = state.coins[index];
-                return CoinTile(coin: coin);
-              },
-            );
-          } else {
-            return const Center(child: Text("No data"));
+    );
+  }
+}
+
+class CoinListBuilder extends StatelessWidget {
+  const CoinListBuilder({
+    super.key,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return BlocBuilder<HomePageCoinListCubit, CoinListState>(
+      builder: (context, state) {
+        if (state is CoinListLoading) {
+          return const SliverToBoxAdapter(
+              child: Center(child: CircularProgressIndicator()));
+        } else if (state is CoinListError) {
+          return SliverToBoxAdapter(
+              child: ErrorLoadingRetry(
+                  retryMethod: () =>
+                      context.read<HomePageCoinListCubit>().fetchCoins()));
+        } else if (state is CoinStateLoaded) {
+          if (state.coins.isEmpty) {
+            return const SliverToBoxAdapter(
+                child: Center(child: Text("No coins found")));
           }
-        },
-      ),
+          return SliverList(
+            delegate:
+                SliverChildBuilderDelegate((BuildContext context, int index) {
+              final coin = state.coins[index];
+              return CoinTile(coin: coin);
+            }, childCount: state.coins.length),
+          );
+        } else {
+          return const Center(child: Text("No data"));
+        }
+      },
     );
   }
 }

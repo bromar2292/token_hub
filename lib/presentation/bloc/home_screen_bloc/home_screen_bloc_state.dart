@@ -1,5 +1,5 @@
-import '../../domain/entities/crypto_coin_modal.dart';
-import '../../domain/entities/crypto_price_data_model.dart';
+import '../../../domain/entities/crypto_coin_modal.dart';
+import '../../../domain/entities/crypto_price_data_model.dart';
 
 abstract class CoinListState {}
 

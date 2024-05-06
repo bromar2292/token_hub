@@ -1,3 +1,5 @@
+import 'package:logger/logger.dart';
+
 import '../../domain/entities/crypto_coin_description_modal.dart';
 import '../../domain/entities/crypto_coin_modal.dart';
 import '../../domain/entities/crypto_price_data_model.dart';
@@ -14,9 +16,9 @@ abstract class CoinListRepository {
 class CoinListRepositoryImpl implements CoinListRepository {
   final CoinGeckoRemoteDataSourceImpl _remoteDataSource;
 
-  ///pulls a list of all the coins
-  ///omar need to put sensitive data somewhere safe
   CoinListRepositoryImpl(this._remoteDataSource);
+
+  var logger = Logger();
 
   @override
   Future<List<CryptoCoin>> fetchCoins() async {
@@ -34,8 +36,9 @@ class CoinListRepositoryImpl implements CoinListRepository {
           .map((priceEntry) => CryptoPriceData.fromJson(priceEntry))
           .toList();
     } catch (error, stack) {
-      print(error);
-      print(stack);
+      logger.e(error);
+      logger.e(stack);
+
       throw Exception('Failed to parse and fetch price data: $error');
     }
   }
@@ -47,8 +50,9 @@ class CoinListRepositoryImpl implements CoinListRepository {
           await _remoteDataSource.fetchCoinData(cryptocurrency);
       return CryptoCoinDescription.fromJson(cryptoCoinJson);
     } catch (error, stack) {
-      print(error);
-      print(stack);
+      logger.e(error);
+      logger.e(stack);
+
       throw Exception('Failed to parse and fetch coin data: $error');
     }
   }

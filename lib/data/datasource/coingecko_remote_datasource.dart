@@ -19,15 +19,19 @@ class CoinGeckoRemoteDataSourceImpl implements CoinGeckoRemoteDataSource {
   String apiKey = API_KEY;
 
   Future<dynamic> _get(String url) async {
-    final response =
-        await http.get(Uri.parse(url), headers: {'x_cg_demo_api_key': apiKey});
+    try {
+      final response = await http
+          .get(Uri.parse(url), headers: {'x_cg_demo_api_key': apiKey});
 
-    if (response.statusCode == 200) {
-      logger.i(response.body);
-      return jsonDecode(response.body);
-    } else {
-      throw Exception(
-          'Failed to fetch data. Status code: ${response.statusCode}');
+      if (response.statusCode == 200) {
+        logger.i(response.body);
+        return jsonDecode(response.body);
+      } else {
+        throw Exception(
+            'Failed to fetch data. Status code: ${response.statusCode}');
+      }
+    } catch (e) {
+      logger.e(e);
     }
   }
 
