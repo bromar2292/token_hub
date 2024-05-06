@@ -2,6 +2,8 @@
 
 A new Flutter project.
 
+the env file would be hidden in a production project
+
 ## Getting Started
 
 This project is a starting point for a Flutter application.
