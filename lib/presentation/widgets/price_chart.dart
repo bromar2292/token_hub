@@ -111,20 +111,16 @@ class PriceChart extends StatelessWidget {
     if (currentDate.year == todayDate.year &&
         currentDate.month == todayDate.month &&
         currentDate.day == todayDate.day) {
-      String monthName = DateFormat('MMM').format(currentDate);
-
       return SideTitleWidget(
         axisSide: meta.axisSide,
-        child: Text(monthName, style: style),
+        child: Text('${currentDate.day}/${currentDate.month}', style: style),
       );
     }
 
     if (currentDate.day % 2 != 0) {
-      String monthName = DateFormat('MMM').format(currentDate);
-
       return SideTitleWidget(
         axisSide: meta.axisSide,
-        child: Text(monthName, style: style),
+        child: Text('${currentDate.day}/${currentDate.month}', style: style),
       );
     } else {
       return Container();
