@@ -3,7 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:token_hub/presentation/bloc/coin_details_bloc/coin_detail_screen_cubit.dart';
 import 'package:token_hub/presentation/bloc/home_screen_bloc/home_screen_bloc_cubit.dart';
 import 'package:token_hub/presentation/screens/coin_details_screen.dart';
-import 'package:token_hub/presentation/screens/home_screen.dart';
+import 'package:token_hub/presentation/screens/home_coins_list_screen.dart';
 import 'package:token_hub/data/repositories/coin_gecko_repository.dart';
 
 import 'data/datasource/coingecko_remote_datasource.dart';
@@ -18,10 +18,10 @@ class MyApp extends StatelessWidget {
       home: BlocProvider(
         create: (_) => HomePageCoinListCubit(
             CoinListRepositoryImpl(CoinGeckoRemoteDataSourceImpl())),
-        child: const HomeScreen(),
+        child: const HomeCoinsLIstScreen(),
       ),
       routes: {
-        HomeScreen.id: (context) => const HomeScreen(),
+        HomeCoinsLIstScreen.id: (context) => const HomeCoinsLIstScreen(),
         CryptoProfilePage.id: (context) => BlocProvider<CoinDetailCubit>(
               create: (context) => CoinDetailCubit(
                   CoinListRepositoryImpl(CoinGeckoRemoteDataSourceImpl())),

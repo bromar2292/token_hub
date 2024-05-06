@@ -12,8 +12,7 @@ class ErrorLoadingRetry extends StatelessWidget {
   Widget build(BuildContext context) {
     return Center(
       child: Column(
-        // Wrap in Column for better layout
-        mainAxisSize: MainAxisSize.min, // Shrink the content
+        mainAxisSize: MainAxisSize.min,
         children: [
           const Padding(
             padding: EdgeInsets.all(24.0),

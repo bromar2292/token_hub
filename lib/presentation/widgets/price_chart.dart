@@ -58,10 +58,14 @@ class PriceChart extends StatelessWidget {
                           minPrice, maxPrice, 2) // 10 = desired labels
 
                       )),
-              topTitles:
-                  const AxisTitles(sideTitles: SideTitles(showTitles: false)),
-              rightTitles:
-                  const AxisTitles(sideTitles: SideTitles(showTitles: false)),
+              topTitles: const AxisTitles(
+                  sideTitles: SideTitles(
+                showTitles: false,
+              )),
+              rightTitles: const AxisTitles(
+                  sideTitles: SideTitles(
+                showTitles: false,
+              )),
             ),
           ),
         ));
@@ -85,8 +89,7 @@ class PriceChart extends StatelessWidget {
     } else if (value >= 1) {
       formattedValue = '\$${value.toStringAsFixed(2)}';
     } else {
-      formattedValue =
-          '\$${value.toStringAsExponential(2)}'; // 2 decimal places in exponent
+      formattedValue = '\$${value.toStringAsExponential(2)}';
     }
 
     return SideTitleWidget(
@@ -103,11 +106,11 @@ class PriceChart extends StatelessWidget {
 
     DateTime currentDate =
         DateTime.fromMillisecondsSinceEpoch(value.toInt(), isUtc: true);
-    DateTime todaysDate = DateTime.now();
+    DateTime todayDate = DateTime.now();
 
-    if (currentDate.year == todaysDate.year &&
-        currentDate.month == todaysDate.month &&
-        currentDate.day == todaysDate.day) {
+    if (currentDate.year == todayDate.year &&
+        currentDate.month == todayDate.month &&
+        currentDate.day == todayDate.day) {
       String monthName = DateFormat('MMM').format(currentDate);
 
       return SideTitleWidget(

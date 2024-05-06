@@ -2,7 +2,6 @@ import 'package:equatable/equatable.dart';
 import 'package:flutter/cupertino.dart';
 
 import '../../../domain/entities/crypto_coin_description_modal.dart';
-import '../../../domain/entities/crypto_coin_modal.dart';
 import '../../../domain/entities/crypto_price_data_model.dart';
 
 @immutable

@@ -16,7 +16,7 @@ class CoinTile extends StatelessWidget {
     return ListTile(
       leading: CircleAvatar(
         backgroundImage: NetworkImage(coin.image),
-        radius: 24.0, // Adjust the size to fit your design
+        radius: 24.0,
       ),
       title: Text(coin.name),
       subtitle: Text(coin.symbol),

@@ -6,16 +6,16 @@ import '../widgets/app_bar_sliver.dart';
 import '../widgets/coin_tile.dart';
 import '../widgets/error_loading_retry_widget.dart';
 
-class HomeScreen extends StatefulWidget {
+class HomeCoinsLIstScreen extends StatefulWidget {
   static const String id = 'Home screen';
 
-  const HomeScreen({Key? key}) : super(key: key);
+  const HomeCoinsLIstScreen({Key? key}) : super(key: key);
 
   @override
-  State<HomeScreen> createState() => _HomeScreenState();
+  State<HomeCoinsLIstScreen> createState() => _HomeCoinsLIstScreenState();
 }
 
-class _HomeScreenState extends State<HomeScreen> {
+class _HomeCoinsLIstScreenState extends State<HomeCoinsLIstScreen> {
   final TextEditingController _searchController = TextEditingController();
 
   @override
@@ -55,23 +55,29 @@ class CoinListBuilder extends StatelessWidget {
       builder: (context, state) {
         if (state is CoinListLoading) {
           return const SliverToBoxAdapter(
-              child: Center(child: CircularProgressIndicator()));
+              child: Center(
+            child: CircularProgressIndicator(),
+          ));
         } else if (state is CoinListError) {
           return SliverToBoxAdapter(
-              child: ErrorLoadingRetry(
-                  retryMethod: () =>
-                      context.read<HomePageCoinListCubit>().fetchCoins()));
+            child: ErrorLoadingRetry(
+              retryMethod: () =>
+                  context.read<HomePageCoinListCubit>().fetchCoins(),
+            ),
+          );
         } else if (state is CoinStateLoaded) {
           if (state.coins.isEmpty) {
             return const SliverToBoxAdapter(
                 child: Center(child: Text("No coins found")));
           }
           return SliverList(
-            delegate:
-                SliverChildBuilderDelegate((BuildContext context, int index) {
-              final coin = state.coins[index];
-              return CoinTile(coin: coin);
-            }, childCount: state.coins.length),
+            delegate: SliverChildBuilderDelegate(
+              (BuildContext context, int index) {
+                final coin = state.coins[index];
+                return CoinTile(coin: coin);
+              },
+              childCount: state.coins.length,
+            ),
           );
         } else {
           return const Center(child: Text("No data"));

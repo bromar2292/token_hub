@@ -15,9 +15,9 @@ class AppBarSliver extends StatelessWidget {
       floating: true,
       centerTitle: true,
       snap: true,
-      title: Padding(
-        padding: const EdgeInsets.only(top: 18.0, bottom: 8),
-        child: const Text('Omars Coin list'),
+      title: const Padding(
+        padding: EdgeInsets.only(top: 18.0, bottom: 8),
+        child: Text('Top 100 Coin list'),
       ),
       bottom: PreferredSize(
         preferredSize: const Size.fromHeight(48.0),

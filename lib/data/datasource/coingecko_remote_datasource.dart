@@ -2,10 +2,8 @@ import 'dart:convert';
 
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:http/http.dart' as http;
-import 'package:token_hub/constants.dart';
-import 'package:logger/logger.dart'; // Import logger
+import 'package:logger/logger.dart';
 
-/// data source pulls the remote data
 abstract class CoinGeckoRemoteDataSource {
   Future<List<dynamic>> fetchCoins();
 
@@ -16,13 +14,13 @@ abstract class CoinGeckoRemoteDataSource {
 
 class CoinGeckoRemoteDataSourceImpl implements CoinGeckoRemoteDataSource {
   var logger = Logger();
-  String apiKey = API_KEY;
+
+  String? apiKey = dotenv.env["API_KEY"];
 
   Future<dynamic> _get(String url) async {
     try {
       final response = await http
-          .get(Uri.parse(url), headers: {'x_cg_demo_api_key': apiKey});
-
+          .get(Uri.parse(url), headers: {'x_cg_demo_api_key': apiKey!});
       if (response.statusCode == 200) {
         logger.i(response.body);
         return jsonDecode(response.body);

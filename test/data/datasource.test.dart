@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:http/http.dart' as http;
 import 'package:mockito/annotations.dart';
@@ -8,7 +9,9 @@ import 'package:token_hub/data/datasource/coingecko_remote_datasource.dart';
 import 'datasource.test.mocks.dart';
 
 @GenerateMocks([http.Client]) // For generating mocks
-main() {
+main() async {
+  await dotenv.load(fileName: ".env");
+
   group('CoinGeckoRemoteDataSourceImpl', () {
     late CoinGeckoRemoteDataSourceImpl dataSource;
 
